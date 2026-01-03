@@ -6,7 +6,7 @@
 
 void terminal_writestring(const char* data) 
 {
-	terminal_write(data, strlen(data));
+	terminal_write(data, kstrlen(data));
 }
 
 void scroll()

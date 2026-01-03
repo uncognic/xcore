@@ -5,8 +5,9 @@
 #include "kernel.h"
 #include "vga.h"
 #include "keyboard.h"
+#include "kshell.h"
 
-size_t strlen(const char* str) 
+size_t kstrlen(const char* str) 
 {
 	size_t len = 0;
 	while (str[len])
@@ -17,6 +18,21 @@ void kprintf(const char* str)
 {
 	terminal_writestring(str);
 }
+int kstrcmp(const char *a, const char *b)
+{
+    while (*a && (*a == *b)) {
+		 a++; 
+		 b++; 
+	}
+    return (unsigned char)*a - (unsigned char)*b;
+}
+
+static void kernel_halt(void)
+{
+    asm volatile("cli");
+    while (1)
+        asm volatile("hlt");
+}
 
 size_t terminal_row;
 size_t terminal_column;
@@ -25,17 +41,11 @@ uint16_t* terminal_buffer = (uint16_t*)VGA_MEMORY;
 
 void kernel_main(void) 
 {
-	terminal_initialize();
-	kprintf("kernel initialized\n");
-	while (true) {
-		char c = keyboard_getchar();
-		 if (c == '\b') {
-            if (terminal_column > 0) {
-                terminal_column--;
-                terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
-            }
-		} else {
-		    terminal_putchar(c);
-		}
-	}
+    terminal_initialize();
+    kprintf("kernel initialized\n");
+
+    kshell_init();
+    kshell_run();
+
+    kernel_halt();
 }

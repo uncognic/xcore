@@ -2,6 +2,8 @@
 #define KERNEL_H
 
 void kernel_main(void);
-size_t strlen(const char* str);
+size_t kstrlen(const char* str);
+int kstrcmp(const char *a, const char *b);
+void kprintf(const char* str);
 
 #endif
