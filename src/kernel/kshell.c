@@ -8,11 +8,11 @@
 #include <stddef.h>
 
 #define KSHELL_BUFSIZE 512
-#define KSHELL_PROMPT "kernel% "
+#define KSHELL_PROMPT "\nkernel shell> "
 
 
 void kshell_init() {
-    kprintf("shell init\n");
+    kprintf("Kernel shell initialized\n");
 }
 
 void kshell_run() {
@@ -60,8 +60,33 @@ void kshell_run() {
             idt_test();
             continue;
         }
+        if (kstrcmp(buffer, "help") == 0) {
+            kprintf("Available commands:\n");
+            kprintf("help - Show this help message\n");
+            kprintf("halt - Halt the kernel\n");
+            kprintf("exit - Halt the kernel\n");
+            kprintf("gdtseg - Print GDT segment registers\n");
+            kprintf("idtest - Trigger a divide-by-zero exception test\n");
+            kprintf("clear - Clear the terminal screen\n");
+            kprintf("about - Show information about the kernel\n");
+            continue;
+        }
+        if (kstrcmp(buffer, "") == 0) {
+            continue;
+        }
+        if (kstrcmp(buffer, "clear") == 0) {
+            terminal_initialize();
+            continue;
+        }
+        if (kstrcmp(buffer, "about") == 0) {
+            kprintf("XCore kernel ");
+            kprintf(KERNEL_VER);
+            kprintf("\n");
+            continue;
+        }
+        
 
-        kprintf("Command received: ");
+        kprintf("Unknown command: ");
         kprintf(buffer);
         kprintf("\n");
     }

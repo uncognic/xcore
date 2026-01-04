@@ -1,5 +1,6 @@
 #ifndef KERNEL_H
 #define KERNEL_H
+#define KERNEL_VER "1.0"
 #include <stdint.h>
 #include <stddef.h>
 void kernel_main(void);

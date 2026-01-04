@@ -90,6 +90,9 @@ void check_segments() {
 void kernel_main(void) 
 {
     terminal_initialize();
+    kprintf("XCore kernel ");
+    kprintf(KERNEL_VER);
+    kprintf(" starting...\n");
 
     gdt_init();
     kprintf("GDT initialized\n");
@@ -100,11 +103,11 @@ void kernel_main(void)
     pic_remap();
     pic_unmask(0);
     pic_unmask(1);
+    kprintf("PIC initialized\n");
 
     __asm__ volatile("sti");
-
-    kprintf("kernel initialized\n");
-
+    kprintf("Interrupts enabled\n");
+    kprintf("Kernel initialized\n");
 
     kshell_init();
     kshell_run();
