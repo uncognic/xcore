@@ -45,8 +45,8 @@ void idt_init() {
     }
     
     idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
-    idt_set_gate(32, (uint32_t)irq0_handler, 0x08, 0x8E); // Timer
-    idt_set_gate(33, (uint32_t)irq1_handler, 0x08, 0x8E); // Keyboard
+    idt_set_gate(32, (uint32_t)irq0_handler, 0x08, 0x8E);
+    idt_set_gate(33, (uint32_t)irq1_handler, 0x08, 0x8E);
 
     idt_flush((uint32_t)&idtp);
 }
