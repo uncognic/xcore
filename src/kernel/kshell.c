@@ -45,7 +45,7 @@ void kshell_run() {
             }
         }
 
-        if (kstrcmp(buffer, "exit") == 0) {
+        if (kstrcmp(buffer, "halt") == 0 || kstrcmp(buffer, "exit") == 0) {
             kprintf("halting\n");
             break;
         }

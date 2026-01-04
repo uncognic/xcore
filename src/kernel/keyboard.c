@@ -1,10 +1,11 @@
 #include "keyboard.h"
+#include "pic.h"
+#define KBD_BUF_SIZE 128
+static char kbd_buf[KBD_BUF_SIZE];
+static int kbd_head = 0;
+static int kbd_tail = 0;
 
-static inline unsigned char inb(unsigned short port) {
-    unsigned char ret;
-    __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
-}
+
 static const char scancode_map[128] = {
     [0x02] = '1', 
     [0x03] = '2', 
@@ -59,14 +60,36 @@ static const char scancode_map[128] = {
     [0x39] = ' '
 };
 
-char keyboard_getchar() {
-    while (1) {
-        while (!(inb(0x64) & 1)) {  }
-        unsigned char sc = inb(0x60);
-        if (sc & 0x80) continue;
-        if (sc < sizeof(scancode_map)) {
-            char c = scancode_map[sc];
-            if (c) return c;
-        }
+static inline void kbd_push(char c) {
+    int next = (kbd_head + 1) % KBD_BUF_SIZE;
+    if (next != kbd_tail) {
+        kbd_buf[kbd_head] = c;
+        kbd_head = next;
     }
+}
+char keyboard_getchar() {
+    while (kbd_head == kbd_tail) {
+        __asm__ volatile ("hlt");
+    }
+
+    char c = kbd_buf[kbd_tail];
+    kbd_tail = (kbd_tail + 1) % KBD_BUF_SIZE;
+    return c;
+}
+void keyboard_irq_handler() {
+    unsigned char sc = inb(0x60);
+
+    if (sc & 0x80)
+        return;
+
+    if (sc < sizeof(scancode_map)) {
+        char c = scancode_map[sc];
+        if (c)
+            kbd_push(c);
+    }
+}
+static inline unsigned char inb(unsigned short port) {
+    unsigned char ret;
+    __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
 }

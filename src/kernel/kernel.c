@@ -6,6 +6,7 @@
 #include "vga.h"
 #include "keyboard.h"
 #include "kshell.h"
+#include "pic.h"
 
 size_t kstrlen(const char* str) 
 {
@@ -42,6 +43,8 @@ uint16_t* terminal_buffer = (uint16_t*)VGA_MEMORY;
 void kernel_main(void) 
 {
     terminal_initialize();
+	pic_remap();
+	pic_unmask(1);
     kprintf("kernel initialized\n");
 
     kshell_init();
