@@ -49,7 +49,7 @@ uint16_t* terminal_buffer = (uint16_t*)VGA_MEMORY;
 void kernel_main(void) 
 {
     terminal_initialize();
-    kprintinfo("Xcore kernel " KERNEL_VER " starting...\n");
+    kprintinfo("Xcore " KERNEL_VER " starting...\n");
 
     gdt_init();
     kprintok("GDT initialized\n");

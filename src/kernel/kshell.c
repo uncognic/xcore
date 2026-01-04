@@ -67,10 +67,10 @@ void kshell_run() {
             kprintf("halt - Halt the kernel\n");
             kprintf("exit - Halt the kernel\n");
             kprintf("gdtseg - Print GDT segment registers\n");
-            kprintf("idtest - Trigger a divide-by-zero exception test\n");
+            kprintf("idtest - Trigger a divide-by-zero (ISR 0) exception test\n");
             kprintf("clear - Clear the terminal screen\n");
             kprintf("about - Show information about the kernel\n");
-            kprintf("pgfault - Trigger a page fault exception\n");
+            kprintf("pgfault - Trigger a page fault (ISR 14) exception\n");
             continue;
         }
         if (kstrcmp(buffer, "") == 0) {
@@ -81,7 +81,7 @@ void kshell_run() {
             continue;
         }
         if (kstrcmp(buffer, "about") == 0) {
-            kprintf("Xcore kernel ");
+            kprintf("Xcore ");
             kprintf(KERNEL_VER);
             kprintf("\n");
             continue;
