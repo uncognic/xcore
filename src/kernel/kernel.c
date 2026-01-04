@@ -92,7 +92,6 @@ void kernel_main(void)
     terminal_initialize();
 
     gdt_init();
-    check_segments();
     kprintf("GDT initialized\n");
 
     idt_init();

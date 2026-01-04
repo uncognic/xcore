@@ -52,12 +52,12 @@ void kshell_run() {
             kprintf("halting\n");
             break;
         }
-        if (kstrcmp(buffer, "idttest") == 0) {
-            idt_test();
-            continue;
-        }
         if (kstrcmp(buffer, "gdtseg") == 0) {
             check_segments();
+            continue;
+        }
+        if (kstrcmp(buffer, "idtest") == 0) {
+            idt_test();
             continue;
         }
 

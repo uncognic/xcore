@@ -2,7 +2,7 @@
 #include "gdt.h"
 #include "kernel.h"
 #include "pic.h"
-    #include "isr.h"
+#include "isr.h"
 #include <stdint.h>
 #define IDT_SIZE 256
 struct idt_entry {
@@ -23,6 +23,7 @@ struct idt_ptr idtp;
 extern void idt_flush(uint32_t);
 extern void irq0_handler();
 extern void irq1_handler();
+extern void isr0();
 
 void idt_set_gate(uint8_t n, uint32_t handler, uint16_t selector, uint8_t type_attr) {
     idt[n].offset_low = handler & 0xFFFF;

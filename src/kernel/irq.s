@@ -7,8 +7,6 @@
 
 isr0:
     cli
-    pushl $0 
-    pushl $0 
     jmp isr_common_stub
 
 isr_common_stub:
@@ -24,7 +22,7 @@ isr_common_stub:
     mov %ax, %fs
     mov %ax, %gs
 
-    push %esp
+    push $0
     call isr_handler
     add $4, %esp
 
@@ -33,9 +31,9 @@ isr_common_stub:
     pop %es
     pop %ds
     popa
-    add $8, %esp
-    iret
 
+    sti
+    iret
 irq0_handler:
     cli
     pusha
