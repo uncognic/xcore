@@ -54,7 +54,7 @@ void kshell_run() {
             break;
         }
         if (kstrcmp(buffer, "gdtseg") == 0) {
-            check_segments();
+            gdt_check_segments();
             continue;
         }
         if (kstrcmp(buffer, "idtest") == 0) {

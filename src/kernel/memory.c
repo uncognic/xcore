@@ -7,9 +7,7 @@
 
 #define PAGE_SIZE 0x1000
 #define KERNEL_HEAP_START 0x01000000
-#define kprintinfo(msg) klog(LOG_INFO, msg)
-#define kprintok(msg)   klog(LOG_OK, msg)
-#define kprinterr(msg)  klog(LOG_ERROR, msg)
+
 typedef struct free_page {
     struct free_page *next;
 } free_page_t;
@@ -56,11 +54,12 @@ void *alloc_page(void) {
 }
 void page_fault_handler(uint32_t error_code, uint32_t cr2) {
     kprinterr("Page fault at: ");
-    kprintf_hex(cr2);
+    kprinterrhex(cr2);
     kprintf("\n");
     kprinterr("Error code: ");
-    kprintf_hex(error_code);
+    kprinterrhex(error_code);
     kprintf("\n");
+    kprinterr("Halting!\n");
     while(1) __asm__("hlt");
 }
 void test_page_fault() {

@@ -1,16 +1,13 @@
 .globl irq0_handler
 .globl irq1_handler
-.globl isr0
+.globl isr0_handler
 .globl isr14_handler
 .extern keyboard_irq_handler
 .extern timer_irq_handler
-.extern isr_handler
+.extern isr0_handler_c
 
-isr0:
+isr0_handler:
     cli
-    jmp isr_common_stub
-
-isr_common_stub:
     pusha
     push %ds
     push %es
@@ -23,9 +20,7 @@ isr_common_stub:
     mov %ax, %fs
     mov %ax, %gs
 
-    push $0
-    call isr_handler
-    add $4, %esp
+    call isr0_handler_c
 
     pop %gs
     pop %fs
@@ -33,7 +28,6 @@ isr_common_stub:
     pop %ds
     popa
 
-    sti
     iret
 irq0_handler:
     cli

@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include "gdt.h"
+#include "kernel.h"
+#include "log.h"
 
 struct gdt_entry gdt[3];
 struct gdt_ptr gp;
@@ -24,4 +26,33 @@ void gdt_init() {
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // data segment
 
     gdt_flush((uint32_t)&gp);
+}
+void gdt_check_segments() {
+    uint16_t cs, ds, ss, es, fs, gs;
+
+    asm volatile("mov %%cs, %0" : "=r"(cs));
+    asm volatile("mov %%ds, %0" : "=r"(ds));
+    asm volatile("mov %%ss, %0" : "=r"(ss));
+    asm volatile("mov %%es, %0" : "=r"(es));
+    asm volatile("mov %%fs, %0" : "=r"(fs));
+    asm volatile("mov %%gs, %0" : "=r"(gs));
+
+    kprintinfo("CS = 0x"); 
+    kprintinfohex(cs);
+    kprintf("\n");
+    kprintinfo("DS = 0x");
+    kprintinfohex(ds); 
+    kprintf("\n");
+    kprintinfo("SS = 0x");
+    kprintinfohex(ss); 
+    kprintf("\n");
+    kprintinfo("ES = 0x"); 
+    kprintinfohex(es); 
+    kprintf("\n");
+    kprintinfo("FS = 0x"); 
+    kprintinfohex(fs); 
+    kprintf("\n");
+    kprintinfo("GS = 0x"); 
+    kprintinfohex(gs); 
+    kprintf("\n");
 }

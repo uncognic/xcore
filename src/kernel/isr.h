@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-void isr_handler(uint32_t int_no);
+void isr0_handler_c(uint32_t int_no);
 void idt_test();
 void isr0();
 

@@ -22,5 +22,6 @@ extern struct gdt_ptr gp;
 
 void gdt_init(void);
 extern void gdt_flush(uint32_t);
+void gdt_check_segments();
 
 #endif 
