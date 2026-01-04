@@ -11,12 +11,11 @@ CFLAGS := -std=gnu99 -ffreestanding -O2 -Wall -Wextra
 LDFLAGS := -T src/linker.ld -ffreestanding -O2 -nostdlib
 
 KERNEL_SRCS := $(wildcard src/kernel/*.c)
-ASM_SRCS := $(wildcard src/*.s)
-SRC := $(ASM_SRCS) $(KERNEL_SRCS)
+KERNEL_ASM := $(wildcard src/kernel/*.s)
 
-OBJDIR := build
-OBJS := $(patsubst src/%.c,$(OBJDIR)/%.o,$(filter %.c,$(SRC))) \
-        $(patsubst src/%.s,$(OBJDIR)/%.o,$(filter %.s,$(SRC)))
+OBJDIR := build/kernel
+OBJS := $(patsubst src/kernel/%.c,$(OBJDIR)/%.o,$(KERNEL_SRCS)) \
+        $(patsubst src/kernel/%.s,$(OBJDIR)/%.o,$(KERNEL_ASM))
 
 BIN := os.bin
 ISO := os.iso
@@ -38,11 +37,11 @@ $(BOOTDIR)/$(BIN): $(BIN) | $(BOOTDIR)
 $(BOOTDIR):
 	mkdir -p $@
 
-$(OBJDIR)/%.o: src/%.c
+$(OBJDIR)/%.o: src/kernel/%.c
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJDIR)/%.o: src/%.s
+$(OBJDIR)/%.o: src/kernel/%.s
 	mkdir -p $(dir $@)
 	$(AS) $< -o $@
 
@@ -53,5 +52,5 @@ run: iso
 	$(QEMU) -cdrom $(ISO)
 
 clean:
-	rm -rf $(OBJDIR) $(BIN) $(ISO) 
-	rm -f $(ISODIR)/$(BIN)
+	rm -rf $(OBJDIR) $(BIN) $(ISO)
+	rm -rf $(ISODIR)/os.bin

@@ -1,10 +1,11 @@
 #include "keyboard.h"
 #include "pic.h"
+
 #define KBD_BUF_SIZE 128
+
 static char kbd_buf[KBD_BUF_SIZE];
 static int kbd_head = 0;
 static int kbd_tail = 0;
-
 
 static const char scancode_map[128] = {
     [0x02] = '1', 
@@ -60,6 +61,12 @@ static const char scancode_map[128] = {
     [0x39] = ' '
 };
 
+static inline unsigned char inb(unsigned short port) {
+    unsigned char ret;
+    __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "Nd"(port));
+    return ret;
+}
+
 static inline void kbd_push(char c) {
     int next = (kbd_head + 1) % KBD_BUF_SIZE;
     if (next != kbd_tail) {
@@ -67,6 +74,7 @@ static inline void kbd_push(char c) {
         kbd_head = next;
     }
 }
+
 char keyboard_getchar() {
     while (kbd_head == kbd_tail) {
         __asm__ volatile ("hlt");
@@ -76,20 +84,20 @@ char keyboard_getchar() {
     kbd_tail = (kbd_tail + 1) % KBD_BUF_SIZE;
     return c;
 }
+
 void keyboard_irq_handler() {
-    unsigned char sc = inb(0x60);
+    unsigned char scancode = inb(0x60);
 
-    if (sc & 0x80)
-        return;
-
-    if (sc < sizeof(scancode_map)) {
-        char c = scancode_map[sc];
-        if (c)
+    if (!(scancode & 0x80)) {
+        char c = scancode_map[scancode];
+        if (c) {
             kbd_push(c);
+        }
     }
+    
+    pic_send_eoi(1);
 }
-static inline unsigned char inb(unsigned short port) {
-    unsigned char ret;
-    __asm__ __volatile__ ("inb %1, %0" : "=a"(ret) : "Nd"(port));
-    return ret;
+
+void timer_irq_handler() {
+    pic_send_eoi(0);
 }

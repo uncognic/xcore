@@ -2,6 +2,9 @@
 #include "terminal.h"
 #include "keyboard.h"
 #include "kernel.h"
+#include "gdt.h"
+#include "isr.h"
+#include "idt.h"
 #include <stddef.h>
 
 #define KSHELL_BUFSIZE 512
@@ -48,6 +51,14 @@ void kshell_run() {
         if (kstrcmp(buffer, "halt") == 0 || kstrcmp(buffer, "exit") == 0) {
             kprintf("halting\n");
             break;
+        }
+        if (kstrcmp(buffer, "idttest") == 0) {
+            idt_test();
+            continue;
+        }
+        if (kstrcmp(buffer, "gdtseg") == 0) {
+            check_segments();
+            continue;
         }
 
         kprintf("Command received: ");
