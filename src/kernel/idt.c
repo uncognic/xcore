@@ -24,6 +24,7 @@ extern void idt_flush(uint32_t);
 extern void irq0_handler();
 extern void irq1_handler();
 extern void isr0();
+extern void isr14_handler();
 
 void idt_set_gate(uint8_t n, uint32_t handler, uint16_t selector, uint8_t type_attr) {
     idt[n].offset_low = handler & 0xFFFF;
@@ -46,6 +47,7 @@ void idt_init() {
     }
     
     idt_set_gate(0, (uint32_t)isr0, 0x08, 0x8E);
+    idt_set_gate(14, (uint32_t)isr14_handler, 0x08, 0x8E);
     idt_set_gate(32, (uint32_t)irq0_handler, 0x08, 0x8E);
     idt_set_gate(33, (uint32_t)irq1_handler, 0x08, 0x8E);
 

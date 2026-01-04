@@ -1,6 +1,7 @@
 .globl irq0_handler
 .globl irq1_handler
 .globl isr0
+.globl isr14_handler
 .extern keyboard_irq_handler
 .extern timer_irq_handler
 .extern isr_handler
@@ -80,4 +81,33 @@ irq1_handler:
     pop %ds
     popa
 
+    iret
+isr14_handler:
+    cli
+    pusha
+    push %ds
+    push %es
+    push %fs
+    push %gs
+
+    mov $0x10, %ax
+    mov %ax, %ds
+    mov %ax, %es
+    mov %ax, %fs
+    mov %ax, %gs
+
+    push %esp
+    mov 8(%esp), %eax
+    mov %cr2, %edx
+    push %edx
+    push %eax
+    call page_fault_handler
+    add $8, %esp
+
+    pop %gs
+    pop %fs
+    pop %es
+    pop %ds
+    popa
+    sti
     iret

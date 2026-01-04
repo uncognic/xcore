@@ -5,6 +5,7 @@
 #include "gdt.h"
 #include "isr.h"
 #include "idt.h"
+#include "memory.h"
 #include <stddef.h>
 
 #define KSHELL_BUFSIZE 512
@@ -12,7 +13,7 @@
 
 
 void kshell_init() {
-    kprintf("Kernel shell initialized\n");
+    kprintf("Dropping into kernel shell...\n");
 }
 
 void kshell_run() {
@@ -69,6 +70,7 @@ void kshell_run() {
             kprintf("idtest - Trigger a divide-by-zero exception test\n");
             kprintf("clear - Clear the terminal screen\n");
             kprintf("about - Show information about the kernel\n");
+            kprintf("pgfault - Trigger a page fault exception\n");
             continue;
         }
         if (kstrcmp(buffer, "") == 0) {
@@ -79,9 +81,13 @@ void kshell_run() {
             continue;
         }
         if (kstrcmp(buffer, "about") == 0) {
-            kprintf("XCore kernel ");
+            kprintf("Xcore kernel ");
             kprintf(KERNEL_VER);
             kprintf("\n");
+            continue;
+        }
+        if (kstrcmp(buffer, "pgfault") == 0) {
+            test_page_fault();
             continue;
         }
         

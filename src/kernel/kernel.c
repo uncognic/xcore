@@ -9,8 +9,8 @@
 #include "gdt.h"
 #include "idt.h"
 #include "pic.h"
-
-
+#include "paging.h"
+#include "log.h"
 size_t kstrlen(const char* str) 
 {
 	size_t len = 0;
@@ -22,6 +22,9 @@ void kprintf(const char* str)
 {
 	terminal_writestring(str);
 }
+#define kprintinfo(msg) klog(LOG_INFO, msg)
+#define kprintok(msg)   klog(LOG_OK, msg)
+#define kprinterr(msg)  klog(LOG_ERROR, msg)
 
 void kprintf_hex(uint32_t n) {
     char hex[9];
@@ -90,25 +93,25 @@ void check_segments() {
 void kernel_main(void) 
 {
     terminal_initialize();
-    kprintf("XCore kernel ");
-    kprintf(KERNEL_VER);
-    kprintf(" starting...\n");
+    kprintinfo("Xcore kernel " KERNEL_VER " starting...\n");
 
     gdt_init();
-    kprintf("GDT initialized\n");
+    kprintok("GDT initialized\n");
+
+    paging_init();
+    kprintok("Paging initialized\n");
 
     idt_init();
-    kprintf("IDT initialized\n");
+    kprintok("IDT initialized\n");
 
     pic_remap();
     pic_unmask(0);
     pic_unmask(1);
-    kprintf("PIC initialized\n");
+    kprintok("PIC initialized\n");
 
     __asm__ volatile("sti");
-    kprintf("Interrupts enabled\n");
-    kprintf("Kernel initialized\n");
-
+    kprintok("Interrupts enabled\n");
+    kprintok("Kernel initialized\n");
     kshell_init();
     kshell_run();
 
