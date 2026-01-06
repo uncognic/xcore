@@ -55,6 +55,7 @@ void *alloc_page(void) {
 }
 void page_fault_handler(uint32_t error_code, uint32_t cr2) {
     terminal_initialize();
+    kprinterr("KERNEL PANIC!\n");
     kprinterr("Page fault at: ");
     kprinterrhex(cr2);
     kprintf("\n");
