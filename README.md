@@ -1,4 +1,4 @@
-# xcore
+# Xcore
 ### Overview
 A hobbyist operating system for i686 architecture, written from scratch in C and Assembly.
 ### Features
