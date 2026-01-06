@@ -16,6 +16,7 @@ void idt_test() {
     );
 }
 void isr0_handler_c(uint32_t int_no) {
+    terminal_initialize();
     kprinterr("Divide by zero exception! Interrupt number: ");
     kprinterrhex(int_no);
     kprintf("\n");

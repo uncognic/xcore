@@ -17,7 +17,7 @@ void klog(log_level_t level, const char* msg) {
             kprintf("[ ok ] ");
             break;
         case LOG_ERROR:
-            terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK));
+            terminal_setcolor(vga_entry_color(VGA_COLOR_BLACK, VGA_COLOR_LIGHT_RED));
             kprintf("[ fail ] ");
             break;
     }
