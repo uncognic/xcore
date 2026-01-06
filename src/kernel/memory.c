@@ -1,6 +1,7 @@
 #include "memory.h"
 #include "paging.h"
 #include "log.h"
+#include "terminal.h"
 #include "kernel.h"
 #include <stdint.h>
 #include <stddef.h>
@@ -53,6 +54,7 @@ void *alloc_page(void) {
     return kmalloc_pages(1);
 }
 void page_fault_handler(uint32_t error_code, uint32_t cr2) {
+    terminal_initialize();
     kprinterr("Page fault at: ");
     kprinterrhex(cr2);
     kprintf("\n");
