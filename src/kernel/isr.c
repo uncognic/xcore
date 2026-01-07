@@ -2,7 +2,7 @@
 #include "terminal.h"
 #include "kernel.h"
 #include "log.h"
-void idt_test() {
+void divbyzero() {
     kprintf("IDT divide by zero test\n");
     int c;
     __asm__ __volatile__(

@@ -57,8 +57,8 @@ void kshell_run() {
             gdt_check_segments();
             continue;
         }
-        if (kstrcmp(buffer, "idtest") == 0) {
-            idt_test();
+        if (kstrcmp(buffer, "divbyzero") == 0) {
+            divbyzero();
             continue;
         }
         if (kstrcmp(buffer, "help") == 0) {
@@ -67,7 +67,7 @@ void kshell_run() {
             kprintf("halt - Halt the kernel\n");
             kprintf("exit - Halt the kernel\n");
             kprintf("gdtseg - Print GDT segment registers\n");
-            kprintf("idtest - Trigger a divide-by-zero (ISR 0) exception test\n");
+            kprintf("divbyzero - Trigger a divide-by-zero (ISR 0) exception test\n");
             kprintf("clear - Clear the terminal screen\n");
             kprintf("about - Show information about the kernel\n");
             kprintf("pgfault - Trigger a page fault (ISR 14) exception\n");
