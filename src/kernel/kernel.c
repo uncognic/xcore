@@ -50,7 +50,7 @@ void kernel_main(void)
 {
     terminal_initialize();
     kprintinfo("Xcore " KERNEL_VER " starting...\n");
-
+    
     gdt_init();
     kprintok("GDT initialized\n");
 

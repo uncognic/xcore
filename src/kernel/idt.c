@@ -3,6 +3,7 @@
 #include "kernel.h"
 #include "pic.h"
 #include "isr.h"
+#include "log.h"
 #include <stdint.h>
 #define IDT_SIZE 256
 struct idt_entry {
@@ -34,7 +35,7 @@ void idt_set_gate(uint8_t n, uint32_t handler, uint16_t selector, uint8_t type_a
     idt[n].offset_high = (handler >> 16) & 0xFFFF;
 }
 void default_handler() {
-    kprintf("Unhandled interrupt\n");
+    kprinterr("Unhandled interrupt\n");
     while(1) __asm__("hlt");
 }
 
